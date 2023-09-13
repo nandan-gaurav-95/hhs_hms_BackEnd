@@ -11,12 +11,10 @@ import java.util.List;
 @Service
 public class DayBookService {
 
-    private final DayBookRepository dayBookRepository; // Assuming you have a DayBookRepository
+	@Autowired
+    private  DayBookRepository dayBookRepository; // Assuming you have a DayBookRepository
 
-    @Autowired
-    public DayBookService(DayBookRepository dayBookRepository) {
-        this.dayBookRepository = dayBookRepository;
-    }
+   
 
     // Create a new day book entry
     public DayBook createDayBookEntry(DayBook dayBookEntry) {
