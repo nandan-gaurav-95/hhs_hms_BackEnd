@@ -1,5 +1,5 @@
 /*
- * @author Jay Shree Ram
+  @author Jay Shree Ram
  * 
  */
 package com.example.hhs.model;
@@ -54,5 +54,4 @@ public class Company {
 	    private int registrationNo;
 	    private String gazzetNo;
 	    
-	 
 }

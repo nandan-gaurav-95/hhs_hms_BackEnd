@@ -49,8 +49,7 @@ public class TenantService {
 			
 		} else {
             throw new RuntimeException("Tenant not found with id: " + id);
-        }
-		
+        }	
 	}
 	
 	 public void deleteTenant(Long id) {

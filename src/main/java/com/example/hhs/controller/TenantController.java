@@ -1,5 +1,6 @@
 package com.example.hhs.controller;
 
+//Jay Shree Ram
 import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
@@ -28,10 +29,11 @@ public class TenantController {
 	@Autowired
 	private TenantService tenantService;
 	
+//	Create Tenant
 	@PostMapping("/tenants")
 	public ResponseEntity<Tenant>createTenant(@RequestBody Tenant tenant){
 		  // Set the date with only the date portion
-		tenant.setDate(Date.valueOf(tenant.getDate().toLocalDate()));
+//		tenant.setDate(Date.valueOf(tenant.getDate().toLocalDate()));
 		Tenant createTenant = tenantService.createTenant(tenant);
 		
 		if(createTenant !=null) {
@@ -44,12 +46,14 @@ public class TenantController {
 //		return new ResponseEntity<>(createTenant, HttpStatus.CREATED);
 	}
 	
+//	Get All tenants
 	@GetMapping("/tenants")
 	public ResponseEntity<List<Tenant>>getAllTenants(){
 		List<Tenant>tenants = tenantService.getAllTenants();
 		return new ResponseEntity<>(tenants,HttpStatus.OK);
 	}
 	
+//	Get tenant by Id
 	  @GetMapping("/tenants/{id}")
 	    public ResponseEntity<Tenant> getTenantById(@PathVariable Long id) {
 	        Optional<Tenant> tenant = tenantService.getTenantById(id);
@@ -57,13 +61,14 @@ public class TenantController {
 	                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	    }
 	  
+//		Update tenant by Id
 	  @PutMapping("/tenants/{id}")
 	    public ResponseEntity<Tenant> updateTenant(@PathVariable Long id, @RequestBody Tenant updatedTenant) {
 	        Tenant tenant = tenantService.updateTenant(id, updatedTenant);
 	        return new ResponseEntity<>(tenant, HttpStatus.OK);
 	    }
 	  
-
+//		Delete tenant by Id
 	    @DeleteMapping("/tenants/{id}")
 	    public ResponseEntity<Void> deleteTenant(@PathVariable Long id) {
 	        tenantService.deleteTenant(id);

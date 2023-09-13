@@ -8,9 +8,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,24 +23,19 @@ import lombok.ToString;
 @ToString
 @Builder
 @Entity
-@Table(name="tenant")
-public class Tenant {
+public class DayBook {
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
-	private String tenantName;
-	private String address;
-	private Long contactNum;
-
-	@ManyToOne
-	@JoinColumn(name="company_id")
-	private Company company;
 	
-	private String allocatedShop;
-    private Double rentCollected;
-    private Double rentDue;
-    private Double securityDeposit;
-    private Double electricityDue;
-//    private Date date;
-//    private String electricityCollectionDetails;
+	private Date date;
+	private String description;
+	private Double cashInFlow;
+	private Double cashOutFlow;
+	private Double chequeInFlow;
+	private Double chequeOutFlow;
+
+    // Other relevant fields for the Day Book
+	
 }
