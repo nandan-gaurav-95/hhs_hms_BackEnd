@@ -1,9 +1,12 @@
 package com.example.hhs.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,28 +24,29 @@ public class PropertyPhotoController {
 	
 	@Autowired
 	private PropertyPhotoService propphotoservice;
+	
 //	uploading multiple Images  WIP
 	
-//	@PutMapping("/company-photo/{id}")
-//	public ResponseEntity<String> updateCompanyPhotoById(
-//	    @PathVariable Long id,
-//	    @RequestParam("files") MultipartFile[] files) {  
-//	    Company updatedCompany = propphotoservice.updateCompanyPhotoById(id, files);
-//	    if (updatedCompany != null) {
-//	        System.err.println(id);
-//	        System.err.println(files.length);
-//	        for (MultipartFile file : files) {
-//	            System.out.println(file.getOriginalFilename());
-//	        }
-//	        return ResponseEntity.ok()
-//	            .header("Message", "Company photos updated successfully")
-//	            .body("Company photos updated successfully");
-//	    } else {
-//	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-//	            .header("Message", "Company not found or photo update failed")
-//	            .body("Company not found or photo update failed");
-//	    }
-//	}
+	@PutMapping("/company-photo/{id}")
+	public ResponseEntity<String> updateCompanyPhotoById(
+	    @PathVariable Long id,
+	    @RequestParam("files") List<MultipartFile> files) {  
+	    Company updatedCompany = propphotoservice.updateCompanyPhotosById(id, files);
+	    if (updatedCompany != null) {
+	        System.err.println(id);
+	        
+	        for (MultipartFile file : files) {
+	            System.out.println(file.getOriginalFilename());
+	        }
+	        return ResponseEntity.ok()
+	            .header("Message", "Company photos updated successfully")
+	            .body("Company photos updated successfully");
+	    } else {
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+	            .header("Message", "Company not found or photo update failed")
+	            .body("Company not found or photo update failed");
+	    }
+	}
 
 //	uploading single Image 
 	@PutMapping("/property-photo/{id}")
@@ -62,5 +66,7 @@ public class PropertyPhotoController {
 	            .body("Company not found or photo update failed");
 	    }
 	}
+	
+
 
 }
