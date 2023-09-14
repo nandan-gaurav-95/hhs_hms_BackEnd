@@ -1,7 +1,9 @@
 package com.example.hhs.model;
 
+import java.sql.Date;
+
 //Jay Shree Ram
-import java.util.Date;
+
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,15 +23,14 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 @Builder
-//@Entity
-//@Table(name="employee")
+@Entity
+@Table(name="employee")
 public class Employee {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	 private Long emp_id;
-	    private String firstName;
-	    private String lastName;
+	    private String empName;
 	    private Date dateOfHiring;
 	    private Date dateOfLeaving;
 	    private String address;
