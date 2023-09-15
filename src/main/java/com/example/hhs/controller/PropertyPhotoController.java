@@ -2,6 +2,7 @@ package com.example.hhs.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,23 +39,30 @@ public class PropertyPhotoController {
 	  @PostMapping("/company-photo/{id}")
 	public ResponseEntity<String> CompanyPhotoById(
 	    @PathVariable Long id,
-	    @RequestParam("files") List<MultipartFile> files) {  
-	    Company updatedCompany = propphotoservice.CompanyPhotosById(id, files);
-	    if (updatedCompany != null) {
-//	        System.err.println(id);
-	        
-	        for (MultipartFile file : files) {
-	        	System.err.println(id);
-	            System.err.println(file.getOriginalFilename());
-	        }
-	        return ResponseEntity.ok()
-	            .header("Message", "Company photos updated successfully")
-	            .body("Company photos updated successfully");
-	    } else {
-	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-	            .header("Message", "Company not found or photo update failed")
-	            .body("Company not found or photo update failed");
-	    }
+	    @RequestParam("files")  MultipartFile[]  files) {  
+		  String message = "";
+		  try {
+		        Company updatedCompany = propphotoservice.CompanyPhotosById(id, Arrays.asList(files));
+
+		        if (updatedCompany != null) {
+		            List<String> fileNames = new ArrayList<>();
+
+		            for (MultipartFile file : files) {
+		            	System.err.println(id);
+			            System.err.println(file.getOriginalFilename());
+		                fileNames.add(file.getOriginalFilename());
+		            }
+
+		            message = "Company photos updated successfully: " + fileNames;
+		            return ResponseEntity.status(HttpStatus.OK).body(message);
+		        } else {
+		            message = "Company not found or photo update failed";
+		            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
+		        }
+		    } catch (Exception e) {
+		        message = "Fail to upload company photos!";
+		        return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(message);
+		    }
 	}
 	  
 //	@PostMapping("/company-photo/{id}")
