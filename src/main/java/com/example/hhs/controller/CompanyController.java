@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.hhs.dto.CompanyDTO;
 import com.example.hhs.model.Company;
 import com.example.hhs.model.CompanyLogo;
 import com.example.hhs.model.CompanyWithImage;
@@ -75,13 +78,22 @@ public class CompanyController {
 	    	    }
 		}
 
-// Get all data 
+// Get all CompanyNames and Id 
     @GetMapping("/getall")
-    public ResponseEntity<List<Company>> getAllCompanies() {
-        List<Company> companies = companyService.getAllCompanies();
-        return ResponseEntity.ok(companies);
+    public ResponseEntity<List<CompanyDTO>> getAllCompanies() {
+    	
+    	 List<Company> companies = companyService.getAllCompanies();
+    	    // Convert the list of Company entities to a list of CompanyDTO
+        List<CompanyDTO> companyDTOs = companies.stream()
+        		  .map(company -> new CompanyDTO(company.getId(), company.getCompanyNm()))
+                  .collect(Collectors.toList());
+        return ResponseEntity.ok(companyDTOs);
     }
     
+
+    
+//    In the following method it contain all company details, Logo & property photo remove 
+//    the property photo from below api these are unnecessary 
     
     // Get company property details by Id 
     @GetMapping("/companiesById/{id}")
@@ -95,6 +107,9 @@ public class CompanyController {
             // Debug logging
             System.out.println("Company Name: " + company.getCompanyNm());
             System.out.println("Image Data Length: " + imageData.length);
+            
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Message", "Company found with the given ID");
 
             CompanyWithImage companyWithImage = new CompanyWithImage();
             companyWithImage.setCompany(company);

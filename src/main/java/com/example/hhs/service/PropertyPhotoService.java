@@ -10,6 +10,8 @@ import com.example.hhs.repository.CompanyRepository;
 import com.example.hhs.repository.PropertyPhotoRepository;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -66,6 +68,25 @@ public class PropertyPhotoService {
             }
         } else {
             return null; // Company with the given ID not found
+        }
+    }
+    
+    
+    public List<byte[]> getCompanyPhotoDataById(Long companyId) {
+        Optional<Company> optionalCompany = companyRepo.findById(companyId);
+
+        if (optionalCompany.isPresent()) {
+            Company company = optionalCompany.get();
+            List<byte[]> photoDataList = new ArrayList<>();
+
+            // Iterate through the PropertyPhoto entities associated with the company
+            for (PropertyPhoto propertyPhoto : company.getPropertyPhotos()) {
+                photoDataList.add(propertyPhoto.getPhotoData());
+            }
+
+            return photoDataList;
+        } else {
+            return Collections.emptyList(); // Company with the given ID not found
         }
     }
     

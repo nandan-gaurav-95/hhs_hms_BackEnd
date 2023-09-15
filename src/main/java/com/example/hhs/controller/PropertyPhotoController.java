@@ -3,6 +3,7 @@ package com.example.hhs.controller;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +65,24 @@ public class PropertyPhotoController {
 		        return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(message);
 		    }
 	}
+	  
+	  @GetMapping("/company-photo/{id}")
+	  public ResponseEntity<List<byte[]>> getCompanyPhotosById(@PathVariable Long id) {
+	      try {
+	          // Retrieve the list of photo file names for the specified company ID
+	          List<byte[]> photoDataList = propphotoservice.getCompanyPhotoDataById(id);
+
+	          if (photoDataList != null && !photoDataList.isEmpty()) {
+	              return ResponseEntity.status(HttpStatus.OK).body(photoDataList);
+	          } else {
+	              return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyList());
+	          }
+	      } catch (Exception e) {
+	          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.emptyList());
+	      }
+	  }
+	  
+	  
 	  
 //	@PostMapping("/company-photo/{id}")
 //	public ResponseEntity<String> CompanyPhotoById(
@@ -131,6 +150,11 @@ public class PropertyPhotoController {
 //	            .body("Company not found or photo update failed");
 //	    }
 //	}
+	  
+	  
+	  
+	  
+	  
 	
 
 
