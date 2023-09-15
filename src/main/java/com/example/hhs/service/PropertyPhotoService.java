@@ -22,7 +22,7 @@ public class PropertyPhotoService {
     
 //    public Company updateCompanyPhotosById(Long id, MultipartFile[] files) {
     
-    public Company updateCompanyPhotosById(Long id, List<MultipartFile> files) {
+    public Company CompanyPhotosById(Long id, List<MultipartFile> files) {
         // First, check if a company with the given ID exists
         Optional<Company> optionalCompany = companyRepo.findById(id);
 
@@ -31,23 +31,28 @@ public class PropertyPhotoService {
 
             try {
                 for (MultipartFile file : files) {
-                    PropertyPhoto propertyPhoto = existingCompany.getPropertyPhoto();
+                	// Create a new PropertyPhoto object for each file
+                    PropertyPhoto propertyPhoto = new PropertyPhoto();
 
-                    if (propertyPhoto == null) {
-                        // Create a new PropertyPhoto object if it doesn't exist
-                        propertyPhoto = new PropertyPhoto();
-                    }
+//                    if (propertyPhoto == null) {
+//                        // Create a new PropertyPhoto object if it doesn't exist
+//                        propertyPhoto = new PropertyPhoto();
+//                    }
 
                     // Set properties of the PropertyPhoto
                     propertyPhoto.setName(file.getOriginalFilename());
                     propertyPhoto.setType(file.getContentType());
                     propertyPhoto.setPhotoData(file.getBytes());
-
+                    
                     // Set the PropertyPhoto in the Company entity
-                    existingCompany.setPropertyPhoto(propertyPhoto);
-
+                    propertyPhoto.setCompany(existingCompany); // Associate with the company
+                    
+                    
                     // Save the PropertyPhoto entity
                     propertyPhotoRepo.save(propertyPhoto);
+                    
+                    // Add the PropertyPhoto to the list in the Company entity
+                    existingCompany.getPropertyPhotos().add(propertyPhoto);
                 }
 
                 // Save the updated Company entity
@@ -63,48 +68,54 @@ public class PropertyPhotoService {
             return null; // Company with the given ID not found
         }
     }
-
     
     
-    public Company updateCompanyPhotoById(Long id, MultipartFile file) {
-        // First, check if a company with the given ID exists
-        Optional<Company> optionalCompany = companyRepo.findById(id);
-
-        if (optionalCompany.isPresent()) {
-            Company existingCompany = optionalCompany.get();
-
-            try {
-                PropertyPhoto propertyPhoto = existingCompany.getPropertyPhoto();
-
-                if (propertyPhoto == null) {
-                    // Create a new PropertyPhoto object if it doesn't exist
-                    propertyPhoto = new PropertyPhoto();
-                }
-
-                // Set properties of the PropertyPhoto
-                propertyPhoto.setName(file.getOriginalFilename());
-                propertyPhoto.setType(file.getContentType());
-                propertyPhoto.setPhotoData(file.getBytes());
-
-                // Set the PropertyPhoto in the Company entity
-                existingCompany.setPropertyPhoto(propertyPhoto);
-
-                // Save the PropertyPhoto entity
-                propertyPhotoRepo.save(propertyPhoto);
-
-                // Save the updated Company entity
-                companyRepo.save(existingCompany);
-
-                return existingCompany;
-            } catch (IOException e) {
-                // Handle the IO exception or log the error as needed
-                e.printStackTrace();
-                return null; // Return null to indicate the update failed
-            }
-        } else {
-            return null; // Company with the given ID not found
-        }
+    public PropertyPhoto savePropertyPhoto(PropertyPhoto propertyPhoto) {
+        // You can implement this method using your repository
+        return propertyPhotoRepo.save(propertyPhoto);
     }
+
+    
+    
+//    public Company updateCompanyPhotoById(Long id, MultipartFile file) {
+//        // First, check if a company with the given ID exists
+//        Optional<Company> optionalCompany = companyRepo.findById(id);
+//
+//        if (optionalCompany.isPresent()) {
+//            Company existingCompany = optionalCompany.get();
+//
+//            try {
+//                PropertyPhoto propertyPhoto = existingCompany.getPropertyPhoto();
+//
+//                if (propertyPhoto == null) {
+//                    // Create a new PropertyPhoto object if it doesn't exist
+//                    propertyPhoto = new PropertyPhoto();
+//                }
+//
+//                // Set properties of the PropertyPhoto
+//                propertyPhoto.setName(file.getOriginalFilename());
+//                propertyPhoto.setType(file.getContentType());
+//                propertyPhoto.setPhotoData(file.getBytes());
+//
+//                // Set the PropertyPhoto in the Company entity
+//                existingCompany.setPropertyPhoto(propertyPhoto);
+//
+//                // Save the PropertyPhoto entity
+//                propertyPhotoRepo.save(propertyPhoto);
+//
+//                // Save the updated Company entity
+//                companyRepo.save(existingCompany);
+//
+//                return existingCompany;
+//            } catch (IOException e) {
+//                // Handle the IO exception or log the error as needed
+//                e.printStackTrace();
+//                return null; // Return null to indicate the update failed
+//            }
+//        } else {
+//            return null; // Company with the given ID not found
+//        }
+//    }
     
     
 }

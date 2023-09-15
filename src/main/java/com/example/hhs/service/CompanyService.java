@@ -29,6 +29,13 @@ public class CompanyService {
 	 public Company createCompany(Company company) {
 	        return companyRepo.save(company);
 	    }
+	 
+	 //For photo uploading 
+	 public Company findById(Long id) {
+	        // You can implement this method using your repository
+	        Optional<Company> optionalCompany = companyRepo.findById(id);
+	        return optionalCompany.orElse(null);
+	    }
 	 	
 	
 
