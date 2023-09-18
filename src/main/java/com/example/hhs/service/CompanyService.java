@@ -10,10 +10,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.hhs.model.Company;
 import com.example.hhs.model.CompanyLogo;
+import com.example.hhs.model.CompanyWithImage;
 import com.example.hhs.model.PropertyPhoto;
 import com.example.hhs.repository.CompanyLogoRepository;
 import com.example.hhs.repository.CompanyRepository;
 import com.example.hhs.repository.PropertyPhotoRepository;
+import com.example.hhs.util.ImageUtil;
 
 
 @Service
@@ -39,9 +41,39 @@ public class CompanyService {
 	 	
 	
 
-	    public Company getCompanyById(Long id) {
-	        return companyRepo.findById(id).orElse(null);
-	    }
+//	    public Company getCompanyById(Long id) {
+//	        return companyRepo.findById(id).orElse(null);
+//	    }
+	 public CompanyWithImage getCompanyWithLogoById(Long id) {
+		    Company company = companyRepo.findById(id).orElse(null);
+
+		    if (company != null) {
+		        CompanyLogo logo = company.getLogo();
+		        byte[] imageData = ImageUtil.decompressImage(logo.getLogoData());
+
+		        CompanyWithImage companyWithImage = new CompanyWithImage();
+		        companyWithImage.setId(company.getId());
+		        companyWithImage.setImageData(imageData);
+		        companyWithImage.setCompanyNm(company.getCompanyNm());
+		        companyWithImage.setEmail(company.getEmail());
+		        companyWithImage.setGstNo(company.getGstNo());
+		        companyWithImage.setMobNo(company.getMobNo());
+		        companyWithImage.setVillageNm(company.getVillageNm());
+		        companyWithImage.setCtsNo(company.getCtsNo());
+		        companyWithImage.setExtentAcres(company.getExtentAcres());
+		        companyWithImage.setBoundries(company.getBoundries());
+		        companyWithImage.setTaxAmt(company.getTaxAmt());
+		        companyWithImage.setAccountNm(company.getAccountNm());
+		        companyWithImage.setAnnualIncome(company.getAnnualIncome());
+		        companyWithImage.setRegistrationNo(company.getRegistrationNo());
+		        companyWithImage.setAddress(company.getAddress());
+		        companyWithImage.setGazzetNo(company.getGazzetNo());
+
+		        return companyWithImage;
+		    } else {
+		        return null; // Or handle the case where the company is not found
+		    }
+		}
 
 	    public List<Company> getAllCompanies() {
 	        return companyRepo.findAll();

@@ -79,7 +79,7 @@ public class CompanyController {
 		}
 
 // Get all CompanyNames and Id 
-    @GetMapping("/getall")
+    @GetMapping("/companies")
     public ResponseEntity<List<CompanyDTO>> getAllCompanies() {
     	
     	 List<Company> companies = companyService.getAllCompanies();
@@ -89,32 +89,17 @@ public class CompanyController {
                   .collect(Collectors.toList());
         return ResponseEntity.ok(companyDTOs);
     }
-    
-
-    
-//    In the following method it contain all company details, Logo & property photo remove 
-//    the property photo from below api these are unnecessary 
+     
     
     // Get company property details by Id 
     @GetMapping("/companiesById/{id}")
     public ResponseEntity<CompanyWithImage> getCompanyById(@PathVariable Long id) {
-        Company company = companyService.getCompanyById(id);
+        CompanyWithImage companyWithImage = companyService.getCompanyWithLogoById(id);
 
-        if (company != null) {
-            CompanyLogo logo = company.getLogo();
-            byte[] imageData = ImageUtil.decompressImage(logo.getLogoData());
-
-            // Debug logging
-            System.out.println("Company Name: " + company.getCompanyNm());
-            System.out.println("Image Data Length: " + imageData.length);
-            
+        if (companyWithImage != null) {
             HttpHeaders headers = new HttpHeaders();
             headers.add("Message", "Company found with the given ID");
-
-            CompanyWithImage companyWithImage = new CompanyWithImage();
-            companyWithImage.setCompany(company);
-            companyWithImage.setImageData(imageData);
-
+            
             return ResponseEntity.ok()
                 .header("Message", "Company found with the given ID")
                 .body(companyWithImage);
@@ -124,6 +109,7 @@ public class CompanyController {
                 .build();
         }
     }
+
 
     //Update company detail by id
     @PutMapping("/company/{id}")

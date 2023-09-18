@@ -54,7 +54,7 @@ public class PropertyPhotoController {
 		                fileNames.add(file.getOriginalFilename());
 		            }
 
-		            message = "Company photos updated successfully: " + fileNames;
+		            message = "Company photos upload successfully: " + fileNames;
 		            return ResponseEntity.status(HttpStatus.OK).body(message);
 		        } else {
 		            message = "Company not found or photo update failed";
