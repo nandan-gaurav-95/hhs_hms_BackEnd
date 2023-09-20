@@ -26,7 +26,7 @@ public class CompanyLogo {
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long l_id;
 
     private String name;
     private String type;

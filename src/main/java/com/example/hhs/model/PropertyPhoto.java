@@ -1,5 +1,6 @@
 package com.example.hhs.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,7 +31,7 @@ public class PropertyPhoto {
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long p_id;
 
     private String name;
     private String type;
@@ -44,7 +45,8 @@ public class PropertyPhoto {
     private Company company;
 
     public PropertyPhoto(Company company, byte[] photoData) {
-		// TODO Auto-generated constructor stub
+    	 this.company = company;
+    	    this.photoData = photoData;
 	}
 
 

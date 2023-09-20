@@ -4,12 +4,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,7 +38,7 @@ public class PropertyPhotoController {
 	@Autowired
     private  CompanyService companyService;
 	
-//	uploading multiple Images  WIP
+//	uploading multiple Images  
 	
 	  @PostMapping("/company-photo/{id}")
 	public ResponseEntity<String> CompanyPhotoById(
@@ -65,6 +68,7 @@ public class PropertyPhotoController {
 		        return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(message);
 		    }
 	}
+
 	  
 	  @GetMapping("/company-photo/{id}")
 	  public ResponseEntity<List<byte[]>> getCompanyPhotosById(@PathVariable Long id) {
@@ -82,55 +86,27 @@ public class PropertyPhotoController {
 	      }
 	  }
 	  
+	  //Delete particular photo with photo-id 
+//	  @DeleteMapping("/company-photo/{p_id}")
+//	  public ResponseEntity<String> deleteCompanyPhotosById(@PathVariable Long p_id) {
+//	      String message = "";
+//	      try {
+//	          boolean deleted = propphotoservice.deletePropertyPhotoById(p_id);
+//	          if (deleted) {
+//	        	  System.err.println(p_id); 
+//	        	  message = "Company photos deleted successfully";
+//	              return ResponseEntity.status(HttpStatus.OK).body(message);
+//	          } else {
+//	              message = "Company not found or photo deletion failed";
+//	              return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
+//	          }
+//	      } catch (Exception e) {
+//	          message = "Failed to delete company photos!";
+//	          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(message);
+//	      }
+//	  }
 	  
-	  
-//	@PostMapping("/company-photo/{id}")
-//	public ResponseEntity<String> CompanyPhotoById(
-//	    @PathVariable Long id,
-//	    @RequestParam("files") List<MultipartFile> files) {  
-//	    
-//	    // Check if the company with the given ID exists
-//	    Company existingCompany = companyService.findById(id);
-//	    
-//	    if (existingCompany != null) {
-//	    	
-//	        try {
-//	        	 List<PropertyPhoto> propertyPhotos = new ArrayList<>();
-//	            // Process and save each uploaded file as a compressed PropertyPhoto
-//	            for (MultipartFile file : files) {
-//	            	System.err.println(id);
-//		            System.err.println(file.getOriginalFilename());
-//		            
-//	                PropertyPhoto propertyPhoto = new PropertyPhoto();
-//	                propertyPhoto.setName(file.getOriginalFilename());
-//	                propertyPhoto.setType(file.getContentType());
-//	                propertyPhoto.setPhotoData(ImageUtil.compressImage(file.getBytes()));
-//	                propertyPhoto.setCompany(existingCompany);
-//	                propertyPhotos.add(propertyPhoto);
-//	                
-//	                // Save the compressed PropertyPhoto to the database
-//	                propphotoservice.savePropertyPhoto(propertyPhoto);
-//	                
-//	                // Optionally, update the Company's propertyPhotos list
-//	                existingCompany.setPropertyPhotos(propertyPhotos);
-//	            }
-//	            
-//	            // Return a success response
-//	            return ResponseEntity.status(HttpStatus.OK)
-//	                .body("Company photos uploaded successfully");
-//	        } catch (IOException e) {
-//	            // Handle the IO exception or log the error as needed
-//	            e.printStackTrace();
-//	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//	                .header("Message", "Failed to update company photos")
-//	                .body("Failed to update company photos");
-//	        }
-//	    } else {
-//	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-//	            .header("Message", "Company not found")
-//	            .body("Company not found");
-//	    }
-//	}
+
 
 //	uploading single Image 
 //	@PutMapping("/property-photo/{id}")
@@ -151,6 +127,26 @@ public class PropertyPhotoController {
 //	    }
 //	}
 	  
+	  
+	  @DeleteMapping("/company-photos/{company_id}")
+	  public ResponseEntity<String> deleteCompanyPhotosByCompanyId(@PathVariable Long company_id) {
+	      String message = "";
+	      try {
+	          boolean deleted = propphotoservice.deletePropertyPhotosByCompanyId(company_id);
+	          if (deleted) {
+	              System.err.println(company_id); 
+	              message = "Company photos deleted successfullly";
+	              return ResponseEntity.status(HttpStatus.OK).body(message);
+	          } else {
+	              message = "Company not found or photo deletion failed";
+	              return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
+	          }
+	      } catch (Exception e) {
+	          message = "Failed to delete company photos!";
+	          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(message);
+	      }
+	  }
+
 	  
 	  
 	  

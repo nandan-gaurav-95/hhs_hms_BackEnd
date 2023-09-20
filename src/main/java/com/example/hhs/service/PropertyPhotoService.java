@@ -11,6 +11,7 @@ import com.example.hhs.repository.PropertyPhotoRepository;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -22,12 +23,11 @@ public class PropertyPhotoService {
     @Autowired
     private PropertyPhotoRepository propertyPhotoRepo;
     
-//    public Company updateCompanyPhotosById(Long id, MultipartFile[] files) {
+
     
     public Company CompanyPhotosById(Long id, List<MultipartFile> files) {
         // First, check if a company with the given ID exists
         Optional<Company> optionalCompany = companyRepo.findById(id);
-
         if (optionalCompany.isPresent()) {
             Company existingCompany = optionalCompany.get();
 
@@ -35,11 +35,6 @@ public class PropertyPhotoService {
                 for (MultipartFile file : files) {
                 	// Create a new PropertyPhoto object for each file
                     PropertyPhoto propertyPhoto = new PropertyPhoto();
-
-//                    if (propertyPhoto == null) {
-//                        // Create a new PropertyPhoto object if it doesn't exist
-//                        propertyPhoto = new PropertyPhoto();
-//                    }
 
                     // Set properties of the PropertyPhoto
                     propertyPhoto.setName(file.getOriginalFilename());
@@ -71,7 +66,7 @@ public class PropertyPhotoService {
         }
     }
     
-    
+    //Get Company photos by id 
     public List<byte[]> getCompanyPhotoDataById(Long companyId) {
         Optional<Company> optionalCompany = companyRepo.findById(companyId);
 
@@ -83,7 +78,11 @@ public class PropertyPhotoService {
             for (PropertyPhoto propertyPhoto : company.getPropertyPhotos()) {
                 photoDataList.add(propertyPhoto.getPhotoData());
             }
-
+            for(int i = 0; i < photoDataList.size(); i++) {
+            	 System.err.println(photoDataList.get(i));
+            	
+            }
+//          System.err.println(photoDataList);
             return photoDataList;
         } else {
             return Collections.emptyList(); // Company with the given ID not found
@@ -94,6 +93,18 @@ public class PropertyPhotoService {
     public PropertyPhoto savePropertyPhoto(PropertyPhoto propertyPhoto) {
         // You can implement this method using your repository
         return propertyPhotoRepo.save(propertyPhoto);
+    }
+    
+    
+    public boolean deletePropertyPhotoById(Long photoId) {
+        try {
+            // Delete the property photo by its ID
+        	propertyPhotoRepo.deleteById(photoId);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     
@@ -137,7 +148,23 @@ public class PropertyPhotoService {
 //            return null; // Company with the given ID not found
 //        }
 //    }
-    
+    public boolean deletePropertyPhotosByCompanyId(Long company_id) {
+        try {
+            // Fetch all property photos associated with the company_id
+            List<PropertyPhoto> propertyPhotos = propertyPhotoRepo.findByCompany_Id(company_id);
+
+            // Delete each property photo
+            for (PropertyPhoto photo : propertyPhotos) {
+            	propertyPhotoRepo.delete(photo);
+            }
+
+            return true;
+        } catch (Exception e) {
+            // Handle any exceptions, e.g., database errors
+            return false;
+        }
+    }
+
     
 }
 

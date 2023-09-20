@@ -62,4 +62,6 @@ public class Company {
 	    private int registrationNo;
 	    private String gazzetNo;
 	    
+	    
+	    
 }
