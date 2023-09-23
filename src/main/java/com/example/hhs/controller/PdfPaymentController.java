@@ -28,14 +28,13 @@ public class PdfPaymentController {
 		
 		ByteArrayInputStream pdf = pdfService.createPdf();
 		HttpHeaders httpHeaders= new HttpHeaders();
-		httpHeaders.add("Content-Disposition","inline;file=hhs-hms.pdf");
+		httpHeaders.add("Content-Disposition","inline;filename=hhs-hms-payment.pdf");
 		
 		return ResponseEntity
 				.ok()
 				.headers(httpHeaders)
 				.contentType(MediaType.APPLICATION_PDF)
 				.body(new InputStreamResource(pdf));
-		
 	}
 
 }

@@ -32,8 +32,6 @@ public class PdfPaymentService {
 	private PaymentVoucherRepository paymentRepo;
 	// List to hold all Students
 		
-
-	
 	public ByteArrayInputStream createPdf() {
 		
 		logger.info("Create PDF started ");
