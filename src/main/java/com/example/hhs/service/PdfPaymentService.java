@@ -25,8 +25,8 @@ import com.lowagie.text.pdf.PdfWriter;
 
 
 @Service
-public class PdfService {
-	private Logger  logger = LoggerFactory.getLogger(PdfService.class);
+public class PdfPaymentService {
+	private Logger  logger = LoggerFactory.getLogger(PdfPaymentService.class);
 	
 	@Autowired
 	private PaymentVoucherRepository paymentRepo;

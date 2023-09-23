@@ -12,16 +12,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.hhs.service.PdfService;
+import com.example.hhs.service.PdfPaymentService;
 
 @RestController
 @CrossOrigin
 @RequestMapping("/api")
-public class PdfController {
+public class PdfPaymentController {
 	
 
 	@Autowired
-	private PdfService pdfService;
+	private PdfPaymentService pdfService;
 	
 	@GetMapping("/generatepdf")
 	public ResponseEntity<InputStreamResource> createPdf() {
