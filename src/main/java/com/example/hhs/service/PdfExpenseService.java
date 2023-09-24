@@ -3,6 +3,7 @@ package com.example.hhs.service;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +26,7 @@ import com.lowagie.text.pdf.PdfWriter;
 
 @Service
 public class PdfExpenseService {
-	private Logger logger = LoggerFactory.getLogger(PdfPaymentService.class);
+    private Logger logger = LoggerFactory.getLogger(PdfExpenseService.class);
 
     @Autowired
     private ExpenseVoucherRepository ExpenseRepo;
@@ -92,4 +93,68 @@ public class PdfExpenseService {
 
         return new ByteArrayInputStream(out.toByteArray());
     }
-}
+
+    // Add a method to generate PDF by ID
+    public byte[] generatePdfById(Long id) {
+    	 Optional<ExpenseVoucher> expenseVoucherOptional = ExpenseRepo.findById(id);
+
+         if (expenseVoucherOptional.isPresent()) {
+             ExpenseVoucher expenseVoucher = expenseVoucherOptional.get();
+
+             // Create a ByteArrayOutputStream to hold the PDF content
+             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+             try {
+                 Document document = new Document(PageSize.A4);
+                 PdfWriter.getInstance(document, byteArrayOutputStream);
+
+                 document.open();
+
+                 PdfPTable table = new PdfPTable(2);
+                 table.setWidthPercentage(100f);
+                 table.setSpacingBefore(10);
+
+                 PdfPCell cell = new PdfPCell();
+                 cell.setPadding(5);
+
+                 Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 20);
+                 Font normalFont = FontFactory.getFont(FontFactory.HELVETICA, 12);
+
+                 cell.setPhrase(new Phrase("Expense ID", titleFont));
+                 table.addCell(cell);
+                 table.addCell(new Phrase(String.valueOf(expenseVoucher.getId()), normalFont));
+
+                 cell.setPhrase(new Phrase("Expense Category", titleFont));
+                 table.addCell(cell);
+                 table.addCell(new Phrase(expenseVoucher.getExpenseCategory(), normalFont));
+
+                 cell.setPhrase(new Phrase("Amount", titleFont));
+                 table.addCell(cell);
+                 table.addCell(new Phrase(String.valueOf(expenseVoucher.getAmount()), normalFont));
+
+                 cell.setPhrase(new Phrase("Expense Number", titleFont));
+                 table.addCell(cell);
+                 table.addCell(new Phrase(String.valueOf(expenseVoucher.getVoucherNumber()), normalFont));
+// Add more details as needed
+                 cell.setPhrase(new Phrase("Expense Date", titleFont));
+                 table.addCell(cell);
+                 table.addCell(new Phrase(String.valueOf(expenseVoucher.getVoucherDate()), normalFont));
+
+                 cell.setPhrase(new Phrase("Expense Remark", titleFont));
+                 table.addCell(cell);
+                 table.addCell(new Phrase(String.valueOf(expenseVoucher.getRemarks()), normalFont));
+
+                 document.add(table);
+                 document.close();
+
+                 return byteArrayOutputStream.toByteArray();
+             } catch (Exception e) {
+                 e.printStackTrace();
+                 return null;
+             }
+         } else {
+             // Handle the case where the expense voucher with the given ID is not found
+             return null;
+         }
+     }
+ }
