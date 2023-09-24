@@ -3,6 +3,7 @@ package com.example.hhs.service;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +33,8 @@ public class PdfPaymentService {
 	private PaymentVoucherRepository paymentRepo;
 	// List to hold all Students
 		
+
+	
 	public ByteArrayInputStream createPdf() {
 		
 		logger.info("Create PDF started ");
@@ -116,5 +119,67 @@ public class PdfPaymentService {
 		
 	return new ByteArrayInputStream(out.toByteArray());
 	}
+	 public byte[] generatePdfById(Long id) {
+	        Optional<PaymentVoucher> paymentVoucherOptional = paymentRepo.findById(id);
 
-}
+	        if (paymentVoucherOptional.isPresent()) {
+	        	PaymentVoucher paymentVoucher = paymentVoucherOptional.get();
+
+	            // Create a ByteArrayOutputStream to hold the PDF content
+	            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+	            try {
+	                Document document = new Document(PageSize.A4);
+	                PdfWriter.getInstance(document, byteArrayOutputStream);
+
+	                document.open();
+
+	                PdfPTable table = new PdfPTable(2);
+	                table.setWidthPercentage(100f);
+	                table.setSpacingBefore(10);
+
+	                PdfPCell cell = new PdfPCell();
+	                cell.setPadding(5);
+
+	                Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 20);
+	                Font normalFont = FontFactory.getFont(FontFactory.HELVETICA, 12);
+
+	                cell.setPhrase(new Phrase("Payment ID", titleFont));
+	                table.addCell(cell);
+	                table.addCell(new Phrase(String.valueOf(paymentVoucher.getId()), normalFont));
+
+	                cell.setPhrase(new Phrase("VoucherNum", titleFont));
+	                table.addCell(cell);
+	                table.addCell(new Phrase(paymentVoucher.getVoucherNum(), normalFont));
+
+	                cell.setPhrase(new Phrase("Amount", titleFont));
+	                table.addCell(cell);
+	                table.addCell(new Phrase(String.valueOf(paymentVoucher.getAmount()), normalFont));
+
+	                cell.setPhrase(new Phrase("PaymentMethod", titleFont));
+	                table.addCell(cell);
+	                table.addCell(new Phrase(String.valueOf(paymentVoucher.getPaymentMethod()), normalFont));
+
+	                // Add more details as needed
+	                cell.setPhrase(new Phrase(" Date", titleFont));
+	                table.addCell(cell);
+	                table.addCell(new Phrase(String.valueOf(paymentVoucher.getVoucherDate()), normalFont));
+
+	                cell.setPhrase(new Phrase("Remark", titleFont));
+	                table.addCell(cell);
+	                table.addCell(new Phrase(String.valueOf(paymentVoucher.getRemark()), normalFont));
+
+	                document.add(table);
+	                document.close();
+
+	                return byteArrayOutputStream.toByteArray();
+	            } catch (Exception e) {
+	                e.printStackTrace();
+	                return null;
+	            }
+	        } else {
+	            // Handle the case where the expense voucher with the given ID is not found
+	            return null;
+	        }
+	    }
+	}
