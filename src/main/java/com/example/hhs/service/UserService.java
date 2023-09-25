@@ -4,6 +4,8 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.example.hhs.dto.LoginDto;
@@ -46,17 +48,20 @@ public class UserService {
 
  
 
-  public String login(LoginDto loginDto) {
+  public ResponseEntity<User> login(LoginDto loginDto) {
 	    User user = userRepository.findByEmail(loginDto.getEmail());
-	    if (user == null || !user.isActive()) {
-	      return "Invalid email or account not activated";
+	    if (user == null && !user.isActive()) {
+	    	
+	      System.out.println("aal na bhai");
+	      return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+	     
 	    }
 	    
 	    if (!loginDto.getPassword().equals(user.getPassword())) {
-	      return "Incorrect password";
+	    	return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 	    }
 
-	    return "Login successful";
+	    return new ResponseEntity<>(user,HttpStatus.OK);
 	  }
 
   

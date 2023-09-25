@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.hhs.dto.LoginDto;
 import com.example.hhs.dto.RegisterDto;
+import com.example.hhs.model.User;
 import com.example.hhs.service.UserService;
 
 import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @CrossOrigin
@@ -34,9 +36,10 @@ public class UserController {
   }
 
  
-  @PutMapping("/login")
-  public ResponseEntity<String> login(@RequestBody LoginDto loginDto) {
-    return new ResponseEntity<>(userService.login(loginDto), HttpStatus.OK);
+  @PostMapping("/login")
+  public ResponseEntity<User> login(@RequestBody LoginDto loginDto) {
+	  System.out.println("main aaya"+ loginDto);
+    return (userService.login(loginDto));
   }
   
   
