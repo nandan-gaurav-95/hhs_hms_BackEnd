@@ -1,5 +1,7 @@
 package com.example.hhs.controller;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +46,9 @@ public class UserController {
   
   
   @PostMapping("/forgot-password") // Use POST for password reset request
-  public ResponseEntity<String> forgotPassword(@RequestParam String email, @RequestParam String newPassword) {
+  public ResponseEntity<String> forgotPassword(@RequestBody Map<String, String> request) {
+      String email = request.get("email");
+      String newPassword = request.get("newPassword");
       return new ResponseEntity<>(userService.forgotPassword(email, newPassword), HttpStatus.OK);
   }
   
